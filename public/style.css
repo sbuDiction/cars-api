@@ -25,10 +25,10 @@ body {
 	font-size: 1.5em;
 }
 
-.container {
+/* .container {
 	width: 15em;
 	margin: auto;
-}
+} */
 
 input[type="text"] {
 	padding: 0.5em;

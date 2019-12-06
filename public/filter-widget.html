@@ -1,16 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Filter widget</title>
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<!-- <link rel="stylesheet" href="style.css"> -->
+
+	<!-- <script type="text/x-template" class="list">
+		{{#each cars}}
+		<tr>
+			<td>{{make}}</td>
+			<td>{{model}}</td>
+			<td>{{color}}</td>
+			<td>R {{price}}</td>
+		</tr>
+		
+		{{/each}}
+</script> -->
+	<script>
+		$(document).ready(function () {
+			$('.ui.dropdown').dropdown();
+			$('.ui.search')
+				.search({
+					type: 'category',
+					minCharacters: 3,
+					apiSettings: {
+						onResponse: function (githubResponse) {
+							var
+								response = {
+									results: {}
+								};
+							// translate GitHub API response to work with search
+							$.each(githubResponse.items, function (index, item) {
+								var
+									language = item.language || 'Unknown',
+									maxResults = 8;
+								if (index >= maxResults) {
+									return false;
+								}
+								// create new language category
+								if (response.results[language] === undefined) {
+									response.results[language] = {
+										name: language,
+										results: []
+									};
+								}
+								// add result to category
+								response.results[language].results.push({
+									title: item.name,
+									description: item.description,
+									url: item.html_url
+								});
+							});
+							return response;
+						},
+						url: '//api.github.com/search/repositories?q={query}'
+					}
+				});
+		});
+	</script>
 
 </head>
+
 <body>
 	<div class="container">
-		<h1>Filter widget</h1>
+		<h1 style="padding-left:40%"> Filter widget</h1>
+		<div class="row">
+			<div class="col-sm">
+				<div class="ui floating dropdown labeled search icon button">
+					<input class="colorSearch" value="colorSearch" type="hidden" name="brand">
+					<i class="car icon"></i>
+					<span class="text">Select Color</span>
+					<div class="menu color_template">
+						<script type="text/x-template" class="template_color">
+							{{#each color}}
+							<div class="item" data-value="{{this}}">{{this}}</div>
+							{{/each}}
+							</script>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="ui floating dropdown labeled search icon button">
+					<i class="car icon"></i>
+					<span class="text">Select Brand</span>
+					<div class="menu template_brand">
+						<script type="text/x-template" class="brand">
+							{{#each brand}}
+							<div data-value="{{this}}" class="item">{{this}}</div>
+							{{/each}}
+							</script>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="ui search">
+					<div class="ui left icon input">
+						<input class="prompt" type="text" placeholder="Search CarsHub">
+						<i class="car icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="padding-top:2%" class="row">
+			<div class="col">
+				<button class="ui animated button btn" tabindex="0">
+					<div class="visible content">Search..</div>
+					<div class="hidden content">
+						<i class="search icon"></i>
+					</div>
+				</button>
+			</div>
+			<div class="col">
+					<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="customCheck1">
+							<label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+						  </div>
+			</div>
+
+		</div>
+
+		<!-- display section -->
+		<div style="padding-top: 3%" class="row results">
+			<script type="text/x-template" class="list">
+				{{#each cars}}
+			<div class="col-sm">
+					<div class="ui card">
+							<div class="content">
+							  <div class="header">{{make}}</div>
+							  <div class="meta">
+								<span><strong style="color: red">{{model}}</strong></span>
+								<a>{{color}}</a>
+							  </div>
+							  <p>{{reg_number}}</p>
+							  <p style="color: black">R <span style="color: blue">{{price}}</span></p>
+							</div>
+						  </div>
+			</div>
+			{{/each}}
+		</script>
+		</div>
 	</div>
+	<script src="filter-api.js"></script>
 </body>
+
 </html>
